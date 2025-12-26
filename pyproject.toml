@@ -1,0 +1,15 @@
+[project]
+name = "metannet"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "numpy>=2.3.5",
+    "openai-whisper>=20250625",
+    "pydub>=0.25.1",
+    "sounddevice>=0.5.3",
+    "torchaudio>=2.9.1",
+    "webrtcvad>=2.0.10",
+    "webrtcvad-wheels>=2.0.14",
+]
