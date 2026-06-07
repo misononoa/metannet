@@ -59,4 +59,4 @@ near-silence. `transcriber._is_hallucination` drops segments by
 - Whisper and silero both assume **16kHz mono float32 in [-1, 1]**; sounddevice provides this directly, so audio is never written to disk or re-decoded.
 - Container audio (Dockerfile/compose.yaml): the Linux sounddevice wheel bundles no PortAudio, so the image needs `libportaudio2`; PortAudio has no Pulse backend, so `libasound2-plugins`+`libpulse0`+`/etc/asound.conf` route ALSA→PipeWire via the mounted pulse socket.
 - podman needs **fully-qualified image names** (`docker.io/...`); Fedora SELinux requires `security_opt: label=disable` for socket/GPU access; GPU is passed via CDI (`devices: nvidia.com/gpu=all`).
-- The app reads `VOICEVOX_URL` from the environment (compose sets the service name) and waits up to 60s for the engine on startup.
+- compose passes `--voicevox-url http://voicevox:50021` as a CLI argument (using the Docker service name); the app waits up to 60s for the engine on startup.

@@ -1,9 +1,8 @@
 # metannet 設定ファイル
-# 未記載のキーはデフォルト値が使われる
 
 [audio]
-# input_device = 0   # 入力デバイス番号 (省略: システム既定)
-# output_device = 0  # 出力デバイス番号 (省略: システム既定)
+# input_device = 0   # 入力デバイス番号
+# output_device = 0  # 出力デバイス番号
 
 [vad]
 threshold = 0.5
@@ -15,10 +14,9 @@ max_speech_ms = 15000
 [whisper]
 model = "small"
 language = "ja"
-# device = "cuda"  # 省略で自動選択 (CUDA があれば CUDA)
+# device = "cuda"
 
 [voicevox]
-# url は環境変数 VOICEVOX_URL でも指定可
 url = "http://127.0.0.1:50021"
 speaker = 2
 speed_scale = 1.0
