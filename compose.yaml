@@ -1,0 +1,36 @@
+services:
+  voicevox:
+    # GPU を使う場合は voicevox/voicevox_engine:nvidia-latest に変更し、
+    # 下の app と同様に devices で nvidia.com/gpu=all を渡す
+    image: docker.io/voicevox/voicevox_engine:cpu-latest
+    ports:
+      - "127.0.0.1:50021:50021"
+    restart: unless-stopped
+
+  app:
+    build: .
+    depends_on:
+      - voicevox
+    command: ["uv", "run", "main.py", "--voicevox-url", "http://voicevox:50021"]
+    environment:
+      # ホストの PipeWire/PulseAudio ソケット(下で mount)を指す
+      PULSE_SERVER: unix:/tmp/pulse-native
+    volumes:
+      # マイク/スピーカー: ホストの pulse ソケットをコンテナに渡す
+      - ${XDG_RUNTIME_DIR}/pulse/native:/tmp/pulse-native
+      # Whisper / silero のモデルキャッシュを永続化(初回DLのやり直しを防ぐ)
+      - whisper-cache:/root/.cache
+    # Fedora 等の SELinux 環境でソケット渡しが拒否されないように
+    security_opt:
+      - label=disable
+    # tty は割り当てない。割り当てると Ctrl-C が app コンテナ内へ直接届き、
+    # podman-compose 本体が SIGINT を取り逃すため停止に Ctrl-C が 2 回必要になる。
+    # tty なしなら 1 回で podman-compose が全コンテナを停止できる
+    # (app は SIGTERM を受けて綺麗に終了する)。
+    # GPU パススルー (nvidia-container-toolkit + CDI 済み)。
+    # CUDA が無い環境では下2行をコメントアウトすれば CPU で動く。
+    devices:
+      - nvidia.com/gpu=all
+
+volumes:
+  whisper-cache:
