@@ -35,6 +35,11 @@ class Config:
     # 認識テキストはあるが読み上げはしたくない場合に True
     transcribe_only: bool = False
 
+    # --- Web字幕サーバ ---
+    web_enabled: bool = False
+    web_port: int = 8080      # HTMLページ配信ポート
+    web_ws_port: int = 8081   # WebSocket ポート
+
     @classmethod
     def from_toml(cls, path: Path = DEFAULT_TOML) -> "Config":
         if not path.exists():
@@ -78,5 +83,13 @@ class Config:
 
         if "transcribe_only" in app:
             kw["transcribe_only"] = app["transcribe_only"]
+
+        web = raw.get("web", {})
+        if "enabled" in web:
+            kw["web_enabled"] = web["enabled"]
+        if "port" in web:
+            kw["web_port"] = web["port"]
+        if "ws_port" in web:
+            kw["web_ws_port"] = web["ws_port"]
 
         return cls(**kw)

@@ -25,3 +25,8 @@ timeout = 30.0
 
 [app]
 transcribe_only = false
+
+[web]
+enabled = true # true にするとブラウザ字幕ページを有効化
+# port = 8080       # HTMLページ配信ポート (OBSブラウザソース用)
+# ws_port = 8081    # WebSocket ポート

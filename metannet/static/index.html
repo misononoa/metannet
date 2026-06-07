@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>metannet subtitle</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #00FF00;
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 32px 24px;
+      font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+    }
+
+    #subtitle {
+      font-size: 52px;
+      font-weight: bold;
+      -webkit-text-stroke: 10px black;
+      paint-order: stroke;
+      color: #ffffff;
+      text-align: center;
+      line-height: 1.4;
+      max-width: 95vw;
+      word-break: break-all;
+      opacity: 0;
+      transition: opacity 0.25s ease-in-out;
+    }
+  </style>
+</head>
+
+<body>
+  <p id="subtitle"></p>
+  <script>
+    const el = document.getElementById('subtitle');
+    let fadeTimer = null;
+
+    function connect() {
+      const ws = new WebSocket('ws://' + location.hostname + ':__WS_PORT__');
+
+      ws.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        el.textContent = data.text;
+        el.style.opacity = '1';
+        if (fadeTimer) clearTimeout(fadeTimer);
+        fadeTimer = setTimeout(() => { el.style.opacity = '0'; }, 5000);
+      };
+
+      ws.onclose = () => setTimeout(connect, 1000);
+    }
+
+    connect();
+  </script>
+</body>
+
+</html>

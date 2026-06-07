@@ -12,6 +12,9 @@ services:
     depends_on:
       - voicevox
     command: ["uv", "run", "main.py", "--voicevox-url", "http://voicevox:50021"]
+    ports:
+      - "127.0.0.1:8080:8080"   # 字幕ページ (OBSブラウザソース用)
+      - "127.0.0.1:8081:8081"   # WebSocket
     environment:
       # ホストの PipeWire/PulseAudio ソケット(下で mount)を指す
       PULSE_SERVER: unix:/tmp/pulse-native

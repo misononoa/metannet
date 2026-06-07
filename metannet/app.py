@@ -15,6 +15,7 @@ from .config import SAMPLE_RATE, Config
 from .segmenter import SileroSegmenter
 from .transcriber import WhisperTranscriber
 from .voicevox import VoicevoxClient, VoicevoxError
+from .web import WebServer
 
 # マイクのブロックサイズ。silero の窓(512)の倍数にしておくと詰め直しが素直。
 BLOCK_SIZE = 1024
@@ -42,6 +43,10 @@ class Pipeline:
             language=config.language,
             device=config.device,
         )
+        self.web_server: WebServer | None = None
+        if config.web_enabled:
+            self.web_server = WebServer(config.web_port, config.web_ws_port)
+
         self.voicevox: VoicevoxClient | None = None
         if not config.transcribe_only:
             self.voicevox = VoicevoxClient(
@@ -74,6 +79,8 @@ class Pipeline:
             if not _is_meaningful(text):
                 continue
             print(f"🗣  {text}", flush=True)
+            if self.web_server is not None:
+                self.web_server.broadcast(text)
             self._text_q.put(text)
         self._text_q.put(_SENTINEL)
 
@@ -97,6 +104,9 @@ class Pipeline:
 
     # --- 起動 / 停止 -----------------------------------------------------
     def run(self) -> None:
+        if self.web_server is not None:
+            self.web_server.start()
+
         if self.voicevox is not None:
             ver = self._wait_for_voicevox()
             if ver is None:
