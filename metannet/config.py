@@ -27,7 +27,7 @@ class Config:
 
     # --- VOICEVOX ---
     voicevox_url: str = "http://127.0.0.1:50021"
-    speaker: int = 1  # 話者ID (1 = 四国めたん ノーマル)
+    speaker: int = 2  # 話者ID (2 = 四国めたん ノーマル)
     speed_scale: float = 1.0
     pitch_scale: float = 0.0
     timeout: float = 30.0

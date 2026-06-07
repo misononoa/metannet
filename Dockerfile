@@ -4,9 +4,9 @@ FROM python:3.12-slim
 # ALSA の pulse プラグイン経由でホストの PipeWire/PulseAudio ソケットへ繋ぐ。
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-        libportaudio2 \
-        libasound2-plugins \
-        libpulse0 \
+    libportaudio2 \
+    libasound2-plugins \
+    libpulse0 \
     && rm -rf /var/lib/apt/lists/*
 
 # ALSA の既定デバイスを pulse に向ける
@@ -27,6 +27,7 @@ RUN uv sync --frozen --no-install-project
 # 本体
 COPY metannet ./metannet
 COPY main.py ./
+COPY metannet.toml ./metannet.toml
 RUN uv sync --frozen
 
 CMD ["uv", "run", "main.py"]

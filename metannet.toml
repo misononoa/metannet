@@ -20,7 +20,7 @@ language = "ja"
 [voicevox]
 # url は環境変数 VOICEVOX_URL でも指定可
 url = "http://127.0.0.1:50021"
-speaker = 3
+speaker = 2
 speed_scale = 1.0
 pitch_scale = 0.0
 timeout = 30.0
